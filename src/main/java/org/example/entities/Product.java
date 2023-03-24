@@ -1,17 +1,18 @@
 package org.example.entities;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Product {
-    private final Long id;
-    private final String name;
-    private final Integer quantity;
-    private final BigDecimal price;
+public class Product implements Serializable {
+    private Long id;
+    private String name;
+    private Integer quantity;
+    private BigDecimal price;
 
     //OneToMany
-    private final Supplier supplier;
+    private Supplier supplier;
 
     //ManyToMany
     private final List<Order> orders = new ArrayList<>();
@@ -46,6 +47,26 @@ public class Product {
 
     public List<Order> getOrders() {
         return orders;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
     }
 
     public static ProductBuilder builder() {

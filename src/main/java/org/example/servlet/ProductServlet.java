@@ -1,8 +1,8 @@
 package org.example.servlet;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.dto.NewProduct;
 import org.example.dto.ResponseProduct;
-import org.example.entities.Product;
 import org.example.services.ProductService;
 import org.example.services.ProductServiceImpl;
 
@@ -15,7 +15,8 @@ import java.io.PrintWriter;
 
 @WebServlet(urlPatterns = "/products/*")
 public class ProductServlet extends HttpServlet {
-    private final Gson gson = new Gson();
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final ProductService service = ProductServiceImpl.getInstance();
 
@@ -26,7 +27,26 @@ public class ProductServlet extends HttpServlet {
 
         ResponseProduct product = service.get(id);
 
-        String json = gson.toJson(product);
+        String json = objectMapper.writeValueAsString(product);
+        PrintWriter out = resp.getWriter();
+        resp.setContentType("application/json; charset=UTF-8");
+        out.print(json);
+        out.flush();
+    }
+
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
+        String uri = req.getRequestURI();
+        Long id = Long.parseLong(uri.substring("/products/".length()));
+
+        service.delete(id);
+    }
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        NewProduct newProduct = objectMapper.readValue(req.getReader(), NewProduct.class);
+
+        ResponseProduct product = service.add(newProduct);
+
+        String json = objectMapper.writeValueAsString(product);
         PrintWriter out = resp.getWriter();
         resp.setContentType("application/json; charset=UTF-8");
         out.print(json);

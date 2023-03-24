@@ -7,7 +7,7 @@ import org.example.entities.Product;
 import java.util.Collection;
 
 public interface ProductService {
-    Product add(NewProduct product);
+    ResponseProduct add(NewProduct product);
     Product update(Long id, Product product);
     boolean delete(Long id);
     ResponseProduct get(Long id);

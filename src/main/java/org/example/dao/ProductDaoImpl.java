@@ -1,13 +1,12 @@
 package org.example.dao;
 
 import org.example.dto.NewProduct;
+import org.example.dto.ResponseProduct;
 import org.example.entities.Product;
 import org.example.utils.ConnectionPool;
+import org.example.utils.ProductMapper;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Collection;
 
 public class ProductDaoImpl implements ProductDao {
@@ -21,19 +20,26 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public Product save(NewProduct product) {
-
-      /*  try (Connection connection = ConnectionPool.getConnection();
+    public Product save(NewProduct newProduct) {
+// TODO: 24.03.2023 Add orders and supplier
+        try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "INSERT INTO products(name, quantity, price) VALUES (?,?,?)",
                      Statement.RETURN_GENERATED_KEYS)) {
 
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setInt(2, product.getQuantity());
-            preparedStatement.setBigDecimal(3, product.getPrice());
+            preparedStatement.setString(1, newProduct.getName());
+            preparedStatement.setInt(2, newProduct.getQuantity());
+            preparedStatement.setBigDecimal(3, newProduct.getPrice());
             preparedStatement.executeUpdate();
 
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+
+            Product product = Product.builder()
+                                     .name(newProduct.getName())
+                                     .price(newProduct.getPrice())
+                                     .quantity(newProduct.getQuantity())
+                                     .build();
+
             if (generatedKeys.next()) {
                 product.setId(generatedKeys.getLong("id"));
             }
@@ -41,8 +47,7 @@ public class ProductDaoImpl implements ProductDao {
             return product;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }*/
-        return null;
+        }
     }
 
     @Override

@@ -10,7 +10,7 @@ public class ResponseProduct {
     private Integer quantity;
     private BigDecimal price;
     private Long supplierId;
-    private List<Long> ordersIds = new ArrayList<>();
+    private List<Long> ordersIds;
 
     public ResponseProduct(
             Long id,
@@ -25,6 +25,54 @@ public class ResponseProduct {
         this.quantity = quantity;
         this.price = price;
         this.supplierId = supplierId;
+        this.ordersIds = ordersIds;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public Long getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(Long supplierId) {
+        this.supplierId = supplierId;
+    }
+
+    public List<Long> getOrdersIds() {
+        return ordersIds;
+    }
+
+    public void setOrdersIds(List<Long> ordersIds) {
         this.ordersIds = ordersIds;
     }
 
