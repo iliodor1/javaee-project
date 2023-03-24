@@ -3,7 +3,9 @@ package org.example.services;
 import org.example.dao.ProductDao;
 import org.example.dao.ProductDaoImpl;
 import org.example.dto.NewProduct;
+import org.example.dto.ResponseProduct;
 import org.example.entities.Product;
+import org.example.utils.ProductMapper;
 
 import java.util.Collection;
 
@@ -21,7 +23,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product save(NewProduct product) {
+    public Product add(NewProduct product) {
         return productDao.save(product);
     }
 
@@ -36,12 +38,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product findById(Long id) {
-        return productDao.findById(id);
+    public ResponseProduct get(Long id) {
+        Product product = productDao.findById(id);
+
+        return ProductMapper.toResponseProduct(product);
     }
 
     @Override
-    public Collection<Product> findAll() {
+    public Collection<Product> getAll() {
         return null;
     }
 }

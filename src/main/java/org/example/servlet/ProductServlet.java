@@ -1,6 +1,7 @@
 package org.example.servlet;
 
 import com.google.gson.Gson;
+import org.example.dto.ResponseProduct;
 import org.example.entities.Product;
 import org.example.services.ProductService;
 import org.example.services.ProductServiceImpl;
@@ -23,7 +24,7 @@ public class ProductServlet extends HttpServlet {
         String uri = req.getRequestURI();
         Long id = Long.parseLong(uri.substring("/products/".length()));
 
-        Product product = service.findById(id);
+        ResponseProduct product = service.get(id);
 
         String json = gson.toJson(product);
         PrintWriter out = resp.getWriter();
