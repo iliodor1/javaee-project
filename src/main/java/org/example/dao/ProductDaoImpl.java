@@ -2,6 +2,7 @@ package org.example.dao;
 
 import org.example.dto.NewProduct;
 import org.example.dto.ResponseProduct;
+import org.example.entities.Order;
 import org.example.entities.Product;
 import org.example.utils.ConnectionPool;
 import org.example.utils.ProductMapper;
@@ -74,7 +75,11 @@ public class ProductDaoImpl implements ProductDao {
     public Product findById(Long id) {
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT * FROM products WHERE id = ?"
+                     "SELECT p.*, s.id AS supplier_id, s.company_name AS supplier_name, po.order_id " +
+                             "FROM products p " +
+                             "LEFT JOIN suppliers s ON p.supplier_id = s.id " +
+                             "LEFT JOIN order_products po ON p.id = po.product_id " +
+                             "WHERE p.id = ?"
              )) {
 
             preparedStatement.setLong(1, id);
@@ -82,11 +87,12 @@ public class ProductDaoImpl implements ProductDao {
             Product product = null;
             if (resultSet.next()) {
                 product = Product.builder()
-                        .id(resultSet.getLong("id"))
-                        .name(resultSet.getString("name"))
-                        .price(resultSet.getBigDecimal("price"))
-                        .quantity(resultSet.getInt("quantity"))
-                        .build();
+                                 .id(resultSet.getLong("id"))
+                                 .name(resultSet.getString("name"))
+                                 .price(resultSet.getBigDecimal("price"))
+                                 .quantity(resultSet.getInt("quantity"))
+                        //.supplier(Order.builder().id(resultSet.getInt("quantity"))
+                                 .build();
             }
 
             return product;

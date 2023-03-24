@@ -15,7 +15,7 @@ public class Product implements Serializable {
     private Supplier supplier;
 
     //ManyToMany
-    private final List<Order> orders = new ArrayList<>();
+    private final List<Long> orderIds = new ArrayList<>();
 
     public Product(Long id, String name, Integer quantity, BigDecimal price, Supplier supplier) {
         this.id = id;
@@ -45,8 +45,8 @@ public class Product implements Serializable {
         return supplier;
     }
 
-    public List<Order> getOrders() {
-        return orders;
+    public List<Long> getOrderIds() {
+        return orderIds;
     }
 
     public void setId(Long id) {

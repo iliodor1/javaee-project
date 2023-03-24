@@ -1,20 +1,25 @@
-package org.example.entities;
+package org.example.dto;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Supplier {
+public class ResponseSupplier {
     private Long id;
     private String companyName;
     private String country;
-    //ManyToOne
     private List<Long> productIds;
+
+    public ResponseSupplier(Long id, String companyName, String country) {
+        this.id = id;
+        this.companyName = companyName;
+        this.country = country;
+    }
 
     public Long getId() {
         return id;
     }
 
-    public Supplier setId(Long id) {
+    public ResponseSupplier setId(Long id) {
         this.id = id;
         return this;
     }
@@ -23,7 +28,7 @@ public class Supplier {
         return companyName;
     }
 
-    public Supplier setCompanyName(String companyName) {
+    public ResponseSupplier setCompanyName(String companyName) {
         this.companyName = companyName;
         return this;
     }
@@ -32,7 +37,7 @@ public class Supplier {
         return country;
     }
 
-    public Supplier setCountry(String country) {
+    public ResponseSupplier setCountry(String country) {
         this.country = country;
         return this;
     }
@@ -41,7 +46,7 @@ public class Supplier {
         return productIds;
     }
 
-    public Supplier setProductIds(List<Long> productIds) {
+    public ResponseSupplier setProductIds(List<Long> productIds) {
         this.productIds = productIds;
         return this;
     }

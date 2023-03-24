@@ -8,8 +8,8 @@ import java.util.Collection;
 
 public interface ProductService {
     ResponseProduct add(NewProduct product);
-    Product update(Long id, Product product);
+    ResponseProduct update(Long id, Product product);
     boolean delete(Long id);
     ResponseProduct get(Long id);
-    Collection<Product> getAll();
+    Collection<Long> getAll();
 }

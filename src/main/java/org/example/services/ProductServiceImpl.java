@@ -30,8 +30,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product update(Long id, Product product) {
-        return productDao.update(id, product);
+    public ResponseProduct update(Long id, Product product) {
+        Product updatedProduct =productDao.update(id, product);
+
+        return ProductMapper.toResponseProduct(updatedProduct);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Collection<Product> getAll() {
+    public Collection<Long> getAll() {
         return null;
     }
 }

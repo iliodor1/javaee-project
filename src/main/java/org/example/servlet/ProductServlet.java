@@ -53,5 +53,16 @@ public class ProductServlet extends HttpServlet {
         out.flush();
     }
 
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
+       /* NewProduct newProduct = objectMapper.readValue(req.getReader(), NewProduct.class);
+
+        ResponseProduct product = service.add(newProduct);
+
+        String json = objectMapper.writeValueAsString(product);
+        PrintWriter out = resp.getWriter();
+        resp.setContentType("application/json; charset=UTF-8");
+        out.print(json);
+        out.flush();*/
+    }
 
 }
