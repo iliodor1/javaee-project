@@ -1,9 +1,9 @@
 package org.example.servlet;
 
 import com.google.gson.Gson;
-import org.example.servlet.entities.Product;
-import org.example.servlet.services.ProductService;
-import org.example.servlet.services.ProductServiceImpl;
+import org.example.entities.Product;
+import org.example.services.ProductService;
+import org.example.services.ProductServiceImpl;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,21 +14,23 @@ import java.io.PrintWriter;
 
 @WebServlet(urlPatterns = "/products/*")
 public class ProductServlet extends HttpServlet {
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
-    ProductService service = new ProductServiceImpl();
+    private final ProductService service = ProductServiceImpl.getInstance();
 
-   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String uri = req.getRequestURI();
         Long id = Long.parseLong(uri.substring("/products/".length()));
 
-        Product product = service.findById(2L);
+        Product product = service.findById(id);
 
         String json = gson.toJson(product);
         PrintWriter out = resp.getWriter();
         resp.setContentType("application/json; charset=UTF-8");
         out.print(json);
         out.flush();
-
     }
+
+
 }
