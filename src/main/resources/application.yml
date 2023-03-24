@@ -1,0 +1,6 @@
+db:
+  url: jdbc:postgresql://localhost:5432/postgres
+  username: postgres
+  password: 443966
+  pool:
+    size: 5
