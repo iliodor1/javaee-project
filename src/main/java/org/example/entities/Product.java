@@ -2,7 +2,6 @@ package org.example.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Product implements Serializable {
@@ -15,14 +14,15 @@ public class Product implements Serializable {
     private Supplier supplier;
 
     //ManyToMany
-    private final List<Long> orderIds = new ArrayList<>();
+    private final List<Long> orderIds;
 
-    public Product(Long id, String name, Integer quantity, BigDecimal price, Supplier supplier) {
+    public Product(Long id, String name, Integer quantity, BigDecimal price, Supplier supplier, List<Long> orderIds) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.supplier = supplier;
+        this.orderIds = orderIds;
     }
 
     public Long getId() {
@@ -79,7 +79,7 @@ public class Product implements Serializable {
         private Integer quantity;
         private BigDecimal price;
         private Supplier supplier;
-        private final List<Order> orders = new ArrayList<>();
+        private List<Long> orderIds;
 
         public ProductBuilder id(Long id) {
             this.id = id;
@@ -106,8 +106,13 @@ public class Product implements Serializable {
             return this;
         }
 
+        public ProductBuilder orderIds(List<Long> orderIds) {
+            this.orderIds = orderIds;
+            return this;
+        }
+
         public Product build() {
-            return new Product(id, name, quantity, price, supplier);
+            return new Product(id, name, quantity, price, supplier, orderIds);
         }
     }
 

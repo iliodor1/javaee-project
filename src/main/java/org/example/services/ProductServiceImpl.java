@@ -2,9 +2,12 @@ package org.example.services;
 
 import org.example.dao.ProductDao;
 import org.example.dao.ProductDaoImpl;
+import org.example.dao.SupplierDao;
+import org.example.dao.SupplierDaoImpl;
 import org.example.dto.NewProduct;
 import org.example.dto.ResponseProduct;
 import org.example.entities.Product;
+import org.example.entities.Supplier;
 import org.example.utils.ProductMapper;
 
 import java.util.Collection;
@@ -12,6 +15,7 @@ import java.util.Collection;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductDao productDao = ProductDaoImpl.getInstance();
+    private final SupplierDao supplierDao = SupplierDaoImpl.getInstance();
 
     private static final ProductService INSTANCE = new ProductServiceImpl();
 
@@ -24,14 +28,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseProduct add(NewProduct newProduct) {
-        Product product = productDao.save(newProduct);
+        Supplier supplier = supplierDao.findById(newProduct.getSupplierId());
+        Product product = productDao.save(ProductMapper.toProduct(newProduct, supplier));
 
         return ProductMapper.toResponseProduct(product);
     }
 
     @Override
     public ResponseProduct update(Long id, Product product) {
-        Product updatedProduct =productDao.update(id, product);
+        Product updatedProduct = productDao.update(id, product);
 
         return ProductMapper.toResponseProduct(updatedProduct);
     }

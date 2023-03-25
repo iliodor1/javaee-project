@@ -1,6 +1,6 @@
 package org.example.services;
 
-import org.example.dao.NewSupplier;
+import org.example.dto.NewSupplier;
 import org.example.dto.ResponseSupplier;
 
 import java.util.Collection;
