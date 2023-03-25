@@ -10,5 +10,5 @@ public interface SupplierService {
     ResponseSupplier update(Long id, NewSupplier newSupplier);
     boolean delete(Long id);
     ResponseSupplier get(Long id);
-    Collection<Long> getAll();
+    Collection<ResponseSupplier> getAll();
 }

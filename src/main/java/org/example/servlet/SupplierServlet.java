@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 
 @WebServlet(urlPatterns = "/suppliers/*")
 public class SupplierServlet extends HttpServlet {
@@ -23,11 +24,17 @@ public class SupplierServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String uri = req.getRequestURI();
-        Long id = Long.parseLong(uri.substring("/suppliers/".length()));
+        String json;
 
-        ResponseSupplier responseSupplier = service.get(id);
+        if (uri.contains("/suppliers/")) {
+            Long id = Long.parseLong(uri.substring("/suppliers/".length()));
+            ResponseSupplier responseSupplier = service.get(id);
+            json = objectMapper.writeValueAsString(responseSupplier);
+        } else {
+            Collection<ResponseSupplier> responseSuppliers = service.getAll();
+            json = objectMapper.writeValueAsString(responseSuppliers);
+        }
 
-        String json = objectMapper.writeValueAsString(responseSupplier);
         PrintWriter out = resp.getWriter();
         resp.setContentType("application/json; charset=UTF-8");
         out.print(json);

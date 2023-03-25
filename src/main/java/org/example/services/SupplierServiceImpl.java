@@ -8,6 +8,7 @@ import org.example.entities.Supplier;
 import org.example.utils.SupplierMapper;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class SupplierServiceImpl implements SupplierService {
 
@@ -60,7 +61,11 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public Collection<Long> getAll() {
-        return null;
+    public Collection<ResponseSupplier> getAll() {
+        Collection<Supplier> suppliers = supplierDao.findAll();
+
+        return suppliers.stream()
+                        .map(SupplierMapper::toResponseSupplier)
+                        .collect(Collectors.toList());
     }
 }
