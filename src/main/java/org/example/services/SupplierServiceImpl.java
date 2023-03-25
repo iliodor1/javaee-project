@@ -38,12 +38,14 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        return supplierDao.delete(id);
     }
 
     @Override
     public ResponseSupplier get(Long id) {
-        return null;
+        Supplier supplier = supplierDao.findById(id);
+
+        return SupplierMapper.toResponseSupplier(supplier);
     }
 
     @Override

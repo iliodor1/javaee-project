@@ -1,11 +1,12 @@
 package org.example.dao;
 
-import org.example.entities.Product;
 import org.example.entities.Supplier;
 import org.example.utils.ConnectionPool;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class SupplierDaoImpl implements SupplierDao {
     private static final SupplierDao INSTANCE = new SupplierDaoImpl();
@@ -47,12 +48,56 @@ public class SupplierDaoImpl implements SupplierDao {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        try (Connection connection = ConnectionPool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "DELETE FROM suppliers WHERE id = ?"
+             )) {
+
+            preparedStatement.setLong(1, id);
+
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public Supplier findById(Long id) {
-        return null;
+        try (Connection connection = ConnectionPool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT s.*, p.id product_id " +
+                             "FROM suppliers s " +
+                             "LEFT JOIN products p ON s.id = p.supplier_id " +
+                             "WHERE s.id = ?"
+             )) {
+
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Supplier supplier = null;
+            List<Long> productIds = new ArrayList<>();
+
+            while (resultSet.next()) {
+                if (supplier == null) {
+                    supplier = Supplier.builder()
+                                       .id(resultSet.getLong("id"))
+                                       .companyName(resultSet.getString("company_name"))
+                                       .country(resultSet.getString("country"))
+                                       .build();
+                }
+
+                Long productId = resultSet.getLong("product_id");
+                if (!resultSet.wasNull()) {
+                    productIds.add(productId);
+                }
+            }
+            if (supplier != null) {
+                supplier.setProductIds(productIds);
+            }
+
+            return supplier;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
