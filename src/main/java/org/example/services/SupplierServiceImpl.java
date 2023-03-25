@@ -33,7 +33,18 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public ResponseSupplier update(Long id, NewSupplier newSupplier) {
-        return null;
+        Supplier updatedSupplier = SupplierMapper.toSupplier(newSupplier);
+
+        Supplier supplier = supplierDao.findById(id);
+
+        if (updatedSupplier.getCompanyName() != null) {
+            supplier.setCompanyName(updatedSupplier.getCompanyName());
+        }
+        if (updatedSupplier.getCountry() != null) {
+            supplier.setCountry(updatedSupplier.getCountry());
+        }
+
+        return SupplierMapper.toResponseSupplier(supplierDao.update(supplier));
     }
 
     @Override

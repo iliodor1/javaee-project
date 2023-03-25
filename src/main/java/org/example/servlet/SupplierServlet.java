@@ -48,6 +48,22 @@ public class SupplierServlet extends HttpServlet {
     }
 
     @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String uri = req.getRequestURI();
+        Long id = Long.parseLong(uri.substring("/suppliers/".length()));
+
+        NewSupplier newSupplier = objectMapper.readValue(req.getReader(), NewSupplier.class);
+
+        ResponseSupplier supplier = service.update(id, newSupplier);
+
+        String json = objectMapper.writeValueAsString(supplier);
+        PrintWriter out = resp.getWriter();
+        resp.setContentType("application/json; charset=UTF-8");
+        out.print(json);
+        out.flush();
+    }
+
+    @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         String uri = req.getRequestURI();
         Long id = Long.parseLong(uri.substring("/suppliers/".length()));

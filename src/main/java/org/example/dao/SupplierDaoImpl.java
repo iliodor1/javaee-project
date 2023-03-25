@@ -43,7 +43,20 @@ public class SupplierDaoImpl implements SupplierDao {
 
     @Override
     public Supplier update(Supplier supplier) {
-        return null;
+        try (Connection connection = ConnectionPool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "UPDATE suppliers SET company_name = ?, country = ? WHERE id = ?",
+                     Statement.RETURN_GENERATED_KEYS)) {
+
+            preparedStatement.setString(1, supplier.getCompanyName());
+            preparedStatement.setString(2, supplier.getCountry());
+            preparedStatement.setLong(3, supplier.getId());
+            preparedStatement.executeUpdate();
+
+            return supplier;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
