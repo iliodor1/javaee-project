@@ -1,6 +1,7 @@
 package org.example.dao.product;
 
 import org.example.entities.Product;
+import org.example.entities.Supplier;
 import org.example.utils.ConnectionPool;
 
 import java.sql.*;
@@ -19,7 +20,6 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product save(Product product) {
-// TODO: 24.03.2023 Add orders and supplier
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "INSERT INTO products(name, quantity, price, supplier_id) VALUES (?,?,?,?)",
@@ -92,7 +92,7 @@ public class ProductDaoImpl implements ProductDao {
     public Optional<Product> findById(Long id) {
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT p.*, s.id AS supplier_id, s.company_name AS supplier_name, po.order_id " +
+                     "SELECT p.*, s.company_name, s.country, po.order_id " +
                              "FROM products p " +
                              "LEFT JOIN suppliers s ON p.supplier_id = s.id " +
                              "LEFT JOIN order_products po ON p.id = po.product_id " +
@@ -102,15 +102,24 @@ public class ProductDaoImpl implements ProductDao {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             Product product = null;
+            Supplier supplier;
             if (resultSet.next()) {
                 product = Product.builder()
                                  .id(resultSet.getLong("id"))
                                  .name(resultSet.getString("name"))
                                  .price(resultSet.getBigDecimal("price"))
                                  .quantity(resultSet.getInt("quantity"))
-                                 //.supplier(Order.builder().id(resultSet.getInt("quantity"))
                                  .build();
+
+                supplier = Supplier.builder()
+                                   .id(resultSet.getLong("supplier_id"))
+                                   .companyName(resultSet.getString("company_name"))
+                                   .country(resultSet.getString("country"))
+                                   .build();
+
+                product.setSupplier(supplier);
             }
+
 
             return Optional.ofNullable(product);
         } catch (SQLException e) {
