@@ -1,7 +1,7 @@
 package org.example.utils;
 
-import org.example.dto.NewProduct;
-import org.example.dto.ResponseProduct;
+import org.example.dto.product.NewProduct;
+import org.example.dto.product.ResponseProduct;
 import org.example.entities.Product;
 import org.example.entities.Supplier;
 

@@ -1,10 +1,10 @@
 package org.example.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.dto.NewProduct;
-import org.example.dto.ResponseProduct;
-import org.example.services.ProductService;
-import org.example.services.ProductServiceImpl;
+import org.example.dto.product.NewProduct;
+import org.example.dto.product.ResponseProduct;
+import org.example.services.product.ProductService;
+import org.example.services.product.ProductServiceImpl;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,6 +34,7 @@ public class ProductServlet extends HttpServlet {
         out.flush();
     }
 
+    @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         String uri = req.getRequestURI();
         Long id = Long.parseLong(uri.substring("/products/".length()));
@@ -41,6 +42,7 @@ public class ProductServlet extends HttpServlet {
         service.delete(id);
     }
 
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         NewProduct newProduct = objectMapper.readValue(req.getReader(), NewProduct.class);
 
@@ -53,16 +55,19 @@ public class ProductServlet extends HttpServlet {
         out.flush();
     }
 
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
-       /* NewProduct newProduct = objectMapper.readValue(req.getReader(), NewProduct.class);
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String uri = req.getRequestURI();
+        Long id = Long.parseLong(uri.substring("/products/".length()));
+        NewProduct newProduct = objectMapper.readValue(req.getReader(), NewProduct.class);
 
-        ResponseProduct product = service.add(newProduct);
+        ResponseProduct product = service.update(id, newProduct);
 
         String json = objectMapper.writeValueAsString(product);
         PrintWriter out = resp.getWriter();
         resp.setContentType("application/json; charset=UTF-8");
         out.print(json);
-        out.flush();*/
+        out.flush();
     }
 
 }

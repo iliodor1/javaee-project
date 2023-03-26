@@ -1,7 +1,7 @@
-package org.example.services;
+package org.example.services.supplier;
 
-import org.example.dto.NewSupplier;
-import org.example.dto.ResponseSupplier;
+import org.example.dto.supplier.NewSupplier;
+import org.example.dto.supplier.ResponseSupplier;
 
 import java.util.Collection;
 

@@ -1,10 +1,11 @@
-package org.example.dao;
+package org.example.dao.product;
 
 import org.example.entities.Product;
 import org.example.utils.ConnectionPool;
 
 import java.sql.*;
 import java.util.Collection;
+import java.util.Optional;
 
 public class ProductDaoImpl implements ProductDao {
     private static final ProductDao INSTANCE = new ProductDaoImpl();
@@ -43,7 +44,28 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product update(Long id, Product product) {
-        return null;
+        try (Connection connection = ConnectionPool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "UPDATE products " +
+                             "SET name = ?, quantity = ?, price = ?, supplier_id = ? " +
+                             "WHERE id = ?")) {
+
+            preparedStatement.setString(1, product.getName());
+            preparedStatement.setInt(2, product.getQuantity());
+            preparedStatement.setBigDecimal(3, product.getPrice());
+            if (product.getSupplier() != null) {
+                preparedStatement.setLong(4, product.getSupplier().getId());
+            } else {
+                preparedStatement.setNull(4, Types.BIGINT);
+            }
+            preparedStatement.setLong(5, product.getId());
+
+            preparedStatement.executeUpdate();
+
+            return product;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -62,7 +84,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public Product findById(Long id) {
+    public Optional<Product> findById(Long id) {
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT p.*, s.id AS supplier_id, s.company_name AS supplier_name, po.order_id " +
@@ -81,11 +103,11 @@ public class ProductDaoImpl implements ProductDao {
                                  .name(resultSet.getString("name"))
                                  .price(resultSet.getBigDecimal("price"))
                                  .quantity(resultSet.getInt("quantity"))
-                        //.supplier(Order.builder().id(resultSet.getInt("quantity"))
+                                 //.supplier(Order.builder().id(resultSet.getInt("quantity"))
                                  .build();
             }
 
-            return product;
+            return Optional.ofNullable(product);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

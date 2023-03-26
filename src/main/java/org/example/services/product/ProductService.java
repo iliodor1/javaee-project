@@ -1,14 +1,13 @@
-package org.example.services;
+package org.example.services.product;
 
-import org.example.dto.NewProduct;
-import org.example.dto.ResponseProduct;
-import org.example.entities.Product;
+import org.example.dto.product.NewProduct;
+import org.example.dto.product.ResponseProduct;
 
 import java.util.Collection;
 
 public interface ProductService {
     ResponseProduct add(NewProduct product);
-    ResponseProduct update(Long id, Product product);
+    ResponseProduct update(Long id, NewProduct product);
     boolean delete(Long id);
     ResponseProduct get(Long id);
     Collection<Long> getAll();

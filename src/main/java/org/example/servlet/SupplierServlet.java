@@ -1,10 +1,10 @@
 package org.example.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.dto.NewSupplier;
-import org.example.dto.ResponseSupplier;
-import org.example.services.SupplierService;
-import org.example.services.SupplierServiceImpl;
+import org.example.dto.supplier.NewSupplier;
+import org.example.dto.supplier.ResponseSupplier;
+import org.example.services.supplier.SupplierService;
+import org.example.services.supplier.SupplierServiceImpl;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

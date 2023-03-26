@@ -1,4 +1,4 @@
-package org.example.dao;
+package org.example.dao.supplier;
 
 import org.example.entities.Supplier;
 import org.example.utils.ConnectionPool;
@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public class SupplierDaoImpl implements SupplierDao {
     private static final SupplierDao INSTANCE = new SupplierDaoImpl();
@@ -45,8 +46,7 @@ public class SupplierDaoImpl implements SupplierDao {
     public Supplier update(Supplier supplier) {
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "UPDATE suppliers SET company_name = ?, country = ? WHERE id = ?",
-                     Statement.RETURN_GENERATED_KEYS)) {
+                     "UPDATE suppliers SET company_name = ?, country = ? WHERE id = ?")) {
 
             preparedStatement.setString(1, supplier.getCompanyName());
             preparedStatement.setString(2, supplier.getCountry());
@@ -75,7 +75,7 @@ public class SupplierDaoImpl implements SupplierDao {
     }
 
     @Override
-    public Supplier findById(Long id) {
+    public Optional<Supplier> findById(Long id) {
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT s.*, p.id product_id " +
@@ -107,7 +107,7 @@ public class SupplierDaoImpl implements SupplierDao {
                 supplier.setProductIds(productIds);
             }
 
-            return supplier;
+            return Optional.ofNullable(supplier);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -141,7 +141,6 @@ public class SupplierDaoImpl implements SupplierDao {
 
                 suppliers.add(supplier);
             }
-
 
             return suppliers;
         } catch (SQLException e) {

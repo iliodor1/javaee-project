@@ -1,6 +1,5 @@
-package org.example.dto;
+package org.example.dto.supplier;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ResponseSupplier {

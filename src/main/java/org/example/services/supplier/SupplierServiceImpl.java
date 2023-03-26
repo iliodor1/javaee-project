@@ -1,9 +1,9 @@
-package org.example.services;
+package org.example.services.supplier;
 
-import org.example.dao.SupplierDao;
-import org.example.dao.SupplierDaoImpl;
-import org.example.dto.NewSupplier;
-import org.example.dto.ResponseSupplier;
+import org.example.dao.supplier.SupplierDao;
+import org.example.dao.supplier.SupplierDaoImpl;
+import org.example.dto.supplier.NewSupplier;
+import org.example.dto.supplier.ResponseSupplier;
 import org.example.entities.Supplier;
 import org.example.utils.SupplierMapper;
 
@@ -36,7 +36,8 @@ public class SupplierServiceImpl implements SupplierService {
     public ResponseSupplier update(Long id, NewSupplier newSupplier) {
         Supplier updatedSupplier = SupplierMapper.toSupplier(newSupplier);
 
-        Supplier supplier = supplierDao.findById(id);
+        Supplier supplier = supplierDao.findById(id)
+                                       .orElseThrow(RuntimeException::new);
 
         if (updatedSupplier.getCompanyName() != null) {
             supplier.setCompanyName(updatedSupplier.getCompanyName());
@@ -55,7 +56,7 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public ResponseSupplier get(Long id) {
-        Supplier supplier = supplierDao.findById(id);
+        Supplier supplier = supplierDao.findById(id).orElseThrow(RuntimeException::new);
 
         return SupplierMapper.toResponseSupplier(supplier);
     }

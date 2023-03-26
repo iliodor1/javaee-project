@@ -1,4 +1,4 @@
-package org.example.dto;
+package org.example.dto.supplier;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
