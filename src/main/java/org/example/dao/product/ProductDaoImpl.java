@@ -22,12 +22,17 @@ public class ProductDaoImpl implements ProductDao {
 // TODO: 24.03.2023 Add orders and supplier
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO products(name, quantity, price) VALUES (?,?,?)",
+                     "INSERT INTO products(name, quantity, price, supplier_id) VALUES (?,?,?,?)",
                      Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, product.getName());
             preparedStatement.setInt(2, product.getQuantity());
             preparedStatement.setBigDecimal(3, product.getPrice());
+            if (product.getSupplier() != null) {
+                preparedStatement.setLong(4, product.getSupplier().getId());
+            } else {
+                preparedStatement.setNull(4, Types.BIGINT);
+            }
             preparedStatement.executeUpdate();
 
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
