@@ -1,22 +1,19 @@
 package org.example.entities;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
     private Long id;
-    private LocalDateTime date;
-    private Integer quantity;
-    private Double price;
+    private LocalDate date;
     //ManyToMany
-    private List<Long> productIds;
+    private final List<Long> productIds;
 
-    public Order(Long id, LocalDateTime date, Integer quantity, Double price, List<Long> productIds) {
+    public Order(Long id, LocalDate date, List<Long> productIds) {
         this.id = id;
         this.date = date;
-        this.quantity = quantity;
-        this.price = price;
         this.productIds = productIds;
     }
 
@@ -24,16 +21,8 @@ public class Order {
         return id;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public Double getPrice() {
-        return price;
     }
 
     public List<Long> getProductIds() {
@@ -44,16 +33,8 @@ public class Order {
         this.id = id;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
     }
 
     public static OrderBuilder builder(){
@@ -62,9 +43,7 @@ public class Order {
 
     public static class OrderBuilder{
         private Long id;
-        private LocalDateTime date;
-        private Integer quantity;
-        private Double price;
+        private LocalDate date;
         private List<Long> productIds = new ArrayList<>();
 
         public OrderBuilder id(Long id) {
@@ -72,18 +51,8 @@ public class Order {
             return this;
         }
 
-        public OrderBuilder date(LocalDateTime date) {
+        public OrderBuilder date(LocalDate date) {
             this.date = date;
-            return this;
-        }
-
-        public OrderBuilder quantity(Integer quantity) {
-            this.quantity = quantity;
-            return this;
-        }
-
-        public OrderBuilder price(Double price) {
-            this.price = price;
             return this;
         }
 
@@ -93,7 +62,7 @@ public class Order {
         }
 
         public Order build(){
-            return new Order(id, date, quantity, price, productIds);
+            return new Order(id, date, productIds);
         }
     }
 }
