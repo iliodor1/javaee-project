@@ -1,20 +1,21 @@
 package org.example.entities;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 public class Supplier {
     private Long id;
     private String companyName;
     private String country;
     //ManyToOne
-    private List<Long> productIds;
+    private Set<Product> products;
 
-    public Supplier(Long id, String companyName, String country, List<Long> productIds) {
+    public Supplier(Long id, String companyName, String country, Set<Product> products) {
         this.id = id;
         this.companyName = companyName;
         this.country = country;
-        this.productIds = productIds;
+        this.products = products;
     }
 
     public static SupplierBuilder builder(){
@@ -25,7 +26,7 @@ public class Supplier {
         private Long id;
         private String companyName;
         private String country;
-        private List<Long> productIds;
+        private Set<Product> products;
 
         public SupplierBuilder id(Long id) {
             this.id = id;
@@ -42,13 +43,13 @@ public class Supplier {
             return this;
         }
 
-        public SupplierBuilder productIds(List<Long> productIds) {
-            this.productIds = productIds;
+        public SupplierBuilder productIds(Set<Product> products) {
+            this.products = products;
             return this;
         }
 
         public Supplier build(){
-            return new Supplier(id, companyName, country, productIds);
+            return new Supplier(id, companyName, country, products);
         }
     }
 
@@ -79,12 +80,35 @@ public class Supplier {
         return this;
     }
 
-    public List<Long> getProductIds() {
-        return productIds;
+    public Set<Product> getProducts() {
+        return products;
     }
 
-    public Supplier setProductIds(List<Long> productIds) {
-        this.productIds = productIds;
+    public Supplier setProducts(Set<Product> products) {
+        this.products = products;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Supplier supplier = (Supplier) o;
+        return Objects.equals(getId(), supplier.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
+
+    @Override
+    public String toString() {
+        return "Supplier{" +
+                "id=" + id +
+                ", companyName='" + companyName + '\'' +
+                ", country='" + country + '\'' +
+                ", products=" + products +
+                '}';
     }
 }

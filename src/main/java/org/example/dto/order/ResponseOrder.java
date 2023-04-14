@@ -32,7 +32,7 @@ public class ResponseOrder {
             return this;
         }
 
-        public OrderResponseOrder productIds(List<Long> productIds) {
+        public OrderResponseOrder products(List<Long> productIds) {
             this.productIds = productIds;
             return this;
         }

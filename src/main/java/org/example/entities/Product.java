@@ -2,7 +2,8 @@ package org.example.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 public class Product implements Serializable {
     private Long id;
@@ -14,15 +15,15 @@ public class Product implements Serializable {
     private Supplier supplier;
 
     //ManyToMany
-    private final List<Long> orderIds;
+    private Set<Order> orders;
 
-    public Product(Long id, String name, Integer quantity, BigDecimal price, Supplier supplier, List<Long> orderIds) {
+    public Product(Long id, String name, Integer quantity, BigDecimal price, Supplier supplier, Set<Order> orders) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.supplier = supplier;
-        this.orderIds = orderIds;
+        this.orders = orders;
     }
 
     public Long getId() {
@@ -45,8 +46,8 @@ public class Product implements Serializable {
         return supplier;
     }
 
-    public List<Long> getOrderIds() {
-        return orderIds;
+    public Set<Order> getOrders() {
+        return orders;
     }
 
     public void setId(Long id) {
@@ -69,6 +70,10 @@ public class Product implements Serializable {
         this.supplier = supplier;
     }
 
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
+    }
+
     public static ProductBuilder builder() {
         return new ProductBuilder();
     }
@@ -79,7 +84,7 @@ public class Product implements Serializable {
         private Integer quantity;
         private BigDecimal price;
         private Supplier supplier;
-        private List<Long> orderIds;
+        private Set<Order> orders;
 
         public ProductBuilder id(Long id) {
             this.id = id;
@@ -106,14 +111,38 @@ public class Product implements Serializable {
             return this;
         }
 
-        public ProductBuilder orderIds(List<Long> orderIds) {
-            this.orderIds = orderIds;
+        public ProductBuilder orders(Set<Order> orders) {
+            this.orders = orders;
             return this;
         }
 
         public Product build() {
-            return new Product(id, name, quantity, price, supplier, orderIds);
+            return new Product(id, name, quantity, price, supplier, orders);
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(getId(), product.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", supplier=" + supplier +
+                ", orders=" + orders +
+                '}';
+    }
 }

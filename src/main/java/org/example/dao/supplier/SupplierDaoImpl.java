@@ -1,16 +1,37 @@
 package org.example.dao.supplier;
 
+import org.example.entities.Product;
 import org.example.entities.Supplier;
 import org.example.utils.ConnectionPool;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class SupplierDaoImpl implements SupplierDao {
     private static final SupplierDao INSTANCE = new SupplierDaoImpl();
+    private static final String INSERT_SUPPLIER =
+            "INSERT INTO suppliers(company_name, country) " +
+                    "VALUES (?, ?)";
+    private static final String UPDATE_SUPPLIER =
+            "UPDATE suppliers " +
+                    "SET company_name = ?, country = ? " +
+                    "WHERE id = ?";
+
+    private static final String FIND_SUPPLIER_BY_ID =
+            "SELECT s.*, p.id product_id, name, quantity, price, supplier_id " +
+                    "FROM suppliers s " +
+                    "LEFT JOIN products p ON s.id = p.supplier_id " +
+                    "WHERE s.id = ?";
+
+    private static final String FIND_ALL_SUPPLIERS =
+            "SELECT s.*, p.id product_id, name, quantity, price, supplier_id " +
+                    "FROM suppliers s " +
+                    "LEFT JOIN products p ON s.id = p.supplier_id";
+
+
+    private static final String DELETE_SUPPLIER =
+            "DELETE FROM suppliers " +
+                    "WHERE id = ?";
 
     private SupplierDaoImpl() {
     }
@@ -22,8 +43,7 @@ public class SupplierDaoImpl implements SupplierDao {
     @Override
     public Supplier save(Supplier supplier) {
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO suppliers(company_name, country) VALUES (?, ?)",
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SUPPLIER,
                      Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, supplier.getCompanyName());
@@ -45,8 +65,7 @@ public class SupplierDaoImpl implements SupplierDao {
     @Override
     public Supplier update(Supplier supplier) {
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "UPDATE suppliers SET company_name = ?, country = ? WHERE id = ?")) {
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SUPPLIER)) {
 
             preparedStatement.setString(1, supplier.getCompanyName());
             preparedStatement.setString(2, supplier.getCountry());
@@ -62,9 +81,7 @@ public class SupplierDaoImpl implements SupplierDao {
     @Override
     public boolean delete(Long id) {
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "DELETE FROM suppliers WHERE id = ?"
-             )) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SUPPLIER)) {
 
             preparedStatement.setLong(1, id);
 
@@ -77,17 +94,12 @@ public class SupplierDaoImpl implements SupplierDao {
     @Override
     public Optional<Supplier> findById(Long id) {
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT s.*, p.id product_id " +
-                             "FROM suppliers s " +
-                             "LEFT JOIN products p ON s.id = p.supplier_id " +
-                             "WHERE s.id = ?"
-             )) {
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_SUPPLIER_BY_ID)) {
 
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             Supplier supplier = null;
-            List<Long> productIds = new ArrayList<>();
+            Set<Product> products = new HashSet<>();
 
             while (resultSet.next()) {
                 if (supplier == null) {
@@ -98,13 +110,20 @@ public class SupplierDaoImpl implements SupplierDao {
                                        .build();
                 }
 
-                Long productId = resultSet.getLong("product_id");
+                Product product = Product.builder()
+                                         .id(resultSet.getLong("product_id"))
+                                         .supplier(Supplier.builder().id(supplier.getId()).build())
+                                         .price(resultSet.getBigDecimal("price"))
+                                         .quantity(resultSet.getInt("quantity"))
+                                         .name(resultSet.getString("name"))
+                                         .build();
+
                 if (!resultSet.wasNull()) {
-                    productIds.add(productId);
+                    products.add(product);
                 }
             }
             if (supplier != null) {
-                supplier.setProductIds(productIds);
+                supplier.setProducts(products);
             }
 
             return Optional.ofNullable(supplier);
@@ -116,16 +135,13 @@ public class SupplierDaoImpl implements SupplierDao {
     @Override
     public Collection<Supplier> findAll() {
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT s.*, p.id product_id " +
-                             "FROM suppliers s " +
-                             "LEFT JOIN products p ON s.id = p.supplier_id"
-             )) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            List<Supplier> suppliers = new ArrayList<>();
-            List<Long> productIds = new ArrayList<>();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_SUPPLIERS)) {
 
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Set<Supplier> suppliers = new HashSet<>();
+            Set<Product> products = new HashSet<>();
             Supplier supplier;
+
             while (resultSet.next()) {
                 supplier = Supplier.builder()
                                    .id(resultSet.getLong("id"))
@@ -133,12 +149,18 @@ public class SupplierDaoImpl implements SupplierDao {
                                    .country(resultSet.getString("country"))
                                    .build();
 
-                Long productId = resultSet.getLong("product_id");
-                if (!resultSet.wasNull()) {
-                    productIds.add(productId);
-                    supplier.setProductIds(productIds);
-                }
+                Product product = Product.builder()
+                                         .id(resultSet.getLong("product_id"))
+                                         .supplier(Supplier.builder().id(supplier.getId()).build())
+                                         .price(resultSet.getBigDecimal("price"))
+                                         .quantity(resultSet.getInt("quantity"))
+                                         .name(resultSet.getString("name"))
+                                         .build();
 
+                if (!resultSet.wasNull()) {
+                    products.add(product);
+                    supplier.setProducts(products);
+                }
                 suppliers.add(supplier);
             }
 

@@ -1,40 +1,43 @@
 package org.example.entities;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 public class Order {
     private Long id;
-    private LocalDate date;
+    private LocalDate orderDate;
     //ManyToMany
-    private final List<Long> productIds;
+    private Set<Product> products;
 
-    public Order(Long id, LocalDate date, List<Long> productIds) {
+    public Order(Long id, LocalDate orderDate, Set<Product> products) {
         this.id = id;
-        this.date = date;
-        this.productIds = productIds;
+        this.orderDate = orderDate;
+        this.products = products;
     }
 
     public Long getId() {
         return id;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getOrderDate() {
+        return orderDate;
     }
 
-    public List<Long> getProductIds() {
-        return productIds;
+    public Set<Product> getProducts() {
+        return products;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setOrderDate(LocalDate orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 
     public static OrderBuilder builder(){
@@ -43,26 +46,49 @@ public class Order {
 
     public static class OrderBuilder{
         private Long id;
-        private LocalDate date;
-        private List<Long> productIds = new ArrayList<>();
+        private LocalDate orderDate;
+        private Set<Product> products;
 
         public OrderBuilder id(Long id) {
             this.id = id;
             return this;
         }
 
-        public OrderBuilder date(LocalDate date) {
-            this.date = date;
+        public OrderBuilder orderDate(LocalDate date) {
+            this.orderDate = date;
             return this;
         }
 
-        public OrderBuilder products(List<Long> productIds) {
-            this.productIds = productIds;
+        public OrderBuilder products(Set<Product> products) {
+            this.products = products;
             return this;
         }
 
         public Order build(){
-            return new Order(id, date, productIds);
+            return new Order(id, orderDate, products);
         }
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(getId(), order.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", orderDate=" + orderDate +
+                ", products=" + products +
+                '}';
     }
 }

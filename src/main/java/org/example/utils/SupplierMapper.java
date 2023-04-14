@@ -2,9 +2,12 @@ package org.example.utils;
 
 import org.example.dto.supplier.NewSupplier;
 import org.example.dto.supplier.ResponseSupplier;
+import org.example.entities.Product;
 import org.example.entities.Supplier;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SupplierMapper {
     public static Supplier toSupplier(NewSupplier newSupplier) {
@@ -16,14 +19,16 @@ public class SupplierMapper {
     }
 
     public static ResponseSupplier toResponseSupplier(Supplier savedSupplier) {
-        List<Long> productsIds
-                = savedSupplier.getProductIds() == null ? null : savedSupplier.getProductIds();
+        Set<Long> products
+                = savedSupplier.getProducts() == null
+                ? null
+                : savedSupplier.getProducts().stream().map(Product::getId).collect(Collectors.toSet());
 
         return ResponseSupplier.builder()
                                .id(savedSupplier.getId())
                                .companyName(savedSupplier.getCompanyName())
                                .country(savedSupplier.getCountry())
-                               .productIds(productsIds)
+                               .products(products)
                                .build();
     }
 }

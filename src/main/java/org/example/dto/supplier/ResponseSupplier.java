@@ -1,28 +1,30 @@
 package org.example.dto.supplier;
 
-import java.util.List;
+import java.util.Set;
 
 public class ResponseSupplier {
     private Long id;
     private String companyName;
     private String country;
-    private List<Long> productIds;
+    private Set<Long> products;
 
-    public ResponseSupplier(Long id, String companyName, String country, List<Long> productIds) {
+    public ResponseSupplier(Long id, String companyName, String country, Set<Long> products) {
         this.id = id;
         this.companyName = companyName;
         this.country = country;
-        this.productIds = productIds;
+        this.products = products;
     }
 
-    public static ResponseSupplierBuilder builder(){
+
+    public static ResponseSupplierBuilder builder() {
         return new ResponseSupplierBuilder();
     }
-    public static class ResponseSupplierBuilder{
+
+    public static class ResponseSupplierBuilder {
         private Long id;
         private String companyName;
         private String country;
-        private List<Long> productIds;
+        private Set<Long> products;
 
         public ResponseSupplierBuilder id(Long id) {
             this.id = id;
@@ -39,13 +41,13 @@ public class ResponseSupplier {
             return this;
         }
 
-        public ResponseSupplierBuilder productIds(List<Long> productIds) {
-            this.productIds = productIds;
+        public ResponseSupplierBuilder products(Set<Long> products) {
+            this.products = products;
             return this;
         }
 
-        public ResponseSupplier build(){
-            return new ResponseSupplier(id, companyName, country, productIds);
+        public ResponseSupplier build() {
+            return new ResponseSupplier(id, companyName, country, products);
         }
     }
 
@@ -76,12 +78,12 @@ public class ResponseSupplier {
         return this;
     }
 
-    public List<Long> getProductIds() {
-        return productIds;
+    public Set<Long> getProducts() {
+        return products;
     }
 
-    public ResponseSupplier setProductIds(List<Long> productIds) {
-        this.productIds = productIds;
+    public ResponseSupplier setProducts(Set<Long> products) {
+        this.products = products;
         return this;
     }
 }

@@ -5,24 +5,23 @@ import org.example.dao.supplier.SupplierDaoImpl;
 import org.example.dto.supplier.NewSupplier;
 import org.example.dto.supplier.ResponseSupplier;
 import org.example.entities.Supplier;
+import org.example.exceptions.NotFoundException;
 import org.example.utils.SupplierMapper;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class SupplierServiceImpl implements SupplierService {
-
     private static final SupplierService INSTANCE = new SupplierServiceImpl();
+    private final SupplierDao supplierDao;
 
     private SupplierServiceImpl() {
+        supplierDao = SupplierDaoImpl.getInstance();
     }
 
     public static SupplierService getInstance() {
         return INSTANCE;
     }
-
-
-    private final SupplierDao supplierDao = SupplierDaoImpl.getInstance();
 
     @Override
     public ResponseSupplier add(NewSupplier newSupplier) {
@@ -33,11 +32,14 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public ResponseSupplier update(Long id, NewSupplier newSupplier) {
+    public ResponseSupplier update(Long id, NewSupplier newSupplier) throws NotFoundException {
         Supplier updatedSupplier = SupplierMapper.toSupplier(newSupplier);
 
         Supplier supplier = supplierDao.findById(id)
-                                       .orElseThrow(RuntimeException::new);
+                                       .orElseThrow(() ->
+                                               new NotFoundException(String.format(
+                                                       "Поставщик с id=%s не найден", id
+                                               )));
 
         if (updatedSupplier.getCompanyName() != null) {
             supplier.setCompanyName(updatedSupplier.getCompanyName());
@@ -50,13 +52,23 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(Long id) throws NotFoundException {
+        supplierDao.findById(id)
+                   .orElseThrow(() ->
+                           new NotFoundException(String.format(
+                                   "Поставщик с id=%s не найден", id
+                           )));
+
         return supplierDao.delete(id);
     }
 
     @Override
-    public ResponseSupplier get(Long id) {
-        Supplier supplier = supplierDao.findById(id).orElseThrow(RuntimeException::new);
+    public ResponseSupplier get(Long id) throws NotFoundException {
+        Supplier supplier = supplierDao.findById(id)
+                                       .orElseThrow(() ->
+                                               new NotFoundException(String.format(
+                                                       "Поставщик с id=%s не найден", id
+                                               )));
 
         return SupplierMapper.toResponseSupplier(supplier);
     }

@@ -8,9 +8,11 @@ import org.example.dto.product.NewProduct;
 import org.example.dto.product.ResponseProduct;
 import org.example.entities.Product;
 import org.example.entities.Supplier;
+import org.example.exceptions.NotFoundException;
 import org.example.utils.ProductMapper;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class ProductServiceImpl implements ProductService {
 
@@ -27,10 +29,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseProduct add(NewProduct newProduct) {
+    public ResponseProduct add(NewProduct newProduct) throws NotFoundException {
         Supplier supplier = null;
         if(newProduct.getSupplierId() != null) {
-            supplier = supplierDao.findById(newProduct.getSupplierId()).orElseThrow(RuntimeException::new);
+            supplier = supplierDao.findById(newProduct.getSupplierId())
+                                  .orElseThrow(() ->
+                                          new NotFoundException(String.format(
+                                                  "Поставщик с id=%s не найден", newProduct.getSupplierId()
+                                          )));
         }
         Product product = productDao.save(ProductMapper.toProduct(newProduct, supplier));
 
@@ -38,9 +44,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseProduct update(Long id, NewProduct newProduct) {
+    public ResponseProduct update(Long id, NewProduct newProduct) throws NotFoundException {
         Product product = productDao.findById(id)
-                                    .orElseThrow(RuntimeException::new);
+                                    .orElseThrow(() ->
+                                            new NotFoundException(String.format(
+                                                    "Продукт с id=%s не найден", id
+                                            )));
 
         if(newProduct.getName() != null){
             product.setName(newProduct.getName());
@@ -53,7 +62,10 @@ public class ProductServiceImpl implements ProductService {
         }
         if(newProduct.getSupplierId() != null){
             Supplier supplier = supplierDao.findById(newProduct.getSupplierId())
-                                           .orElseThrow(RuntimeException::new);
+                                           .orElseThrow(() ->
+                                                   new NotFoundException(String.format(
+                                                           "Поставщик с id=%s не найден", id
+                                                   )));
             product.setSupplier(supplier);
         }
 
@@ -63,20 +75,33 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(Long id) throws NotFoundException {
+        productDao.findById(id)
+                  .orElseThrow(() ->
+                          new NotFoundException(String.format(
+                                  "Продукт с id=%s не найден", id
+                          )));
+
         return productDao.delete(id);
     }
 
     @Override
-    public ResponseProduct get(Long id) {
+    public ResponseProduct get(Long id) throws NotFoundException {
         Product product = productDao.findById(id)
-                                    .orElseThrow(RuntimeException::new);
+                                    .orElseThrow(() ->
+                                            new NotFoundException(String.format(
+                                                    "Продукт с id=%s не найден", id
+                                            )));
 
         return ProductMapper.toResponseProduct(product);
     }
 
     @Override
-    public Collection<Long> getAll() {
-        return null;
+    public Collection<ResponseProduct> getAll() {
+
+        return productDao.findAll()
+                         .stream()
+                         .map(ProductMapper::toResponseProduct)
+                         .collect(Collectors.toList());
     }
 }

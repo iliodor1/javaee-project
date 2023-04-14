@@ -1,8 +1,9 @@
 package org.example.dto.product;
 
+import org.example.entities.Order;
+
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 public class ResponseProduct {
     private Long id;
@@ -10,7 +11,7 @@ public class ResponseProduct {
     private Integer quantity;
     private BigDecimal price;
     private Long supplierId;
-    private List<Long> ordersIds;
+    private Set<Long> orders;
 
     public ResponseProduct(
             Long id,
@@ -18,14 +19,14 @@ public class ResponseProduct {
             Integer quantity,
             BigDecimal price,
             Long supplierId,
-            List<Long> ordersIds
+            Set<Long> orders
     ) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.supplierId = supplierId;
-        this.ordersIds = ordersIds;
+        this.orders = orders;
     }
 
     public Long getId() {
@@ -68,12 +69,12 @@ public class ResponseProduct {
         this.supplierId = supplierId;
     }
 
-    public List<Long> getOrdersIds() {
-        return ordersIds;
+    public Set<Long> getOrders() {
+        return orders;
     }
 
-    public void setOrdersIds(List<Long> ordersIds) {
-        this.ordersIds = ordersIds;
+    public void setOrders(Set<Long> orders) {
+        this.orders = orders;
     }
 
     public static ResponseProductBuilder builder(){
@@ -85,7 +86,7 @@ public class ResponseProduct {
         private Integer quantity;
         private BigDecimal price;
         private Long supplierId;
-        private List<Long> ordersIds = new ArrayList<>();
+        private Set<Long> orders;
 
         public ResponseProductBuilder id(Long id) {
             this.id = id;
@@ -112,13 +113,13 @@ public class ResponseProduct {
             return this;
         }
 
-        public ResponseProductBuilder ordersIds(List<Long> ordersIds) {
-            this.ordersIds = ordersIds;
+        public ResponseProductBuilder ordersIds(Set<Long> orders) {
+            this.orders = orders;
             return this;
         }
 
         public ResponseProduct build(){
-            return new ResponseProduct(id, name, quantity, price, supplierId,ordersIds);
+            return new ResponseProduct(id, name, quantity, price, supplierId, orders);
         }
     }
 }

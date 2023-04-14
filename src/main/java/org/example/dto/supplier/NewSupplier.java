@@ -1,6 +1,5 @@
 package org.example.dto.supplier;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -15,6 +14,9 @@ public class NewSupplier implements Serializable {
     public NewSupplier(@JsonProperty("companyName") String companyName, @JsonProperty("country") String country) {
         this.companyName = companyName;
         this.country = country;
+    }
+
+    public NewSupplier() {
     }
 
     public String getCompanyName() {

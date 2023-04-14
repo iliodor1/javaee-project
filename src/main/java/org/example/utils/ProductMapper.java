@@ -2,15 +2,20 @@ package org.example.utils;
 
 import org.example.dto.product.NewProduct;
 import org.example.dto.product.ResponseProduct;
+import org.example.entities.Order;
 import org.example.entities.Product;
 import org.example.entities.Supplier;
 
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ProductMapper {
     public static ResponseProduct toResponseProduct(Product product) {
         Long supplierId = product.getSupplier() == null ? null : product.getSupplier().getId();
-        List<Long> ordersIds = product.getOrderIds() == null ? null : product.getOrderIds();
+        Set<Long> orders = product.getOrders() == null ? null : product.getOrders()
+                                                                       .stream()
+                                                                       .map(Order::getId)
+                                                                       .collect(Collectors.toSet());
 
         return ResponseProduct.builder()
                               .id(product.getId())
@@ -18,19 +23,16 @@ public class ProductMapper {
                               .quantity(product.getQuantity())
                               .price(product.getPrice())
                               .supplierId(supplierId)
-                              .ordersIds(ordersIds)
+                              .ordersIds(orders)
                               .build();
     }
 
     public static Product toProduct(NewProduct newProduct, Supplier supplier) {
-        List<Long> ordersIds = newProduct.getOrdersIds() == null ? null : newProduct.getOrdersIds();
-
         return Product.builder()
                       .name(newProduct.getName())
                       .quantity(newProduct.getQuantity())
                       .price(newProduct.getPrice())
                       .supplier(supplier)
-                      .orderIds(ordersIds)
                       .build();
     }
 }

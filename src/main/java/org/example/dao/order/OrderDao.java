@@ -7,8 +7,10 @@ import java.util.Optional;
 
 public interface OrderDao {
     Order save(Order order);
-    Order update(Long id, Order order);
+
     boolean delete(Long id);
+
     Optional<Order> findById(Long id);
+
     Collection<Order> findAll();
 }
