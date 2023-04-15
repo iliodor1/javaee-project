@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProductDaoTest {
 
     ProductDao productDao = ProductDaoImpl.getInstance();
-    String PRODUCT_SQL = "INSERT INTO products(name, price, quantity, supplier_id) VALUES (?,?,?,?)";
+    String PRODUCT_SQL = "INSERT INTO products(product_name, price, quantity, supplier_id) VALUES (?,?,?,?)";
 
     Product newProduct;
 

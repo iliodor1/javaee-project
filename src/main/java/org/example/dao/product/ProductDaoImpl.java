@@ -28,11 +28,11 @@ public class ProductDaoImpl implements ProductDao {
                     "LEFT JOIN order_products po ON p.id = po.product_id " +
                     "LEFT JOIN orders o ON o.id = po.order_id";
     private static final String SAVE_PRODUCT =
-            "INSERT INTO products(name, quantity, price, supplier_id) " +
+            "INSERT INTO products(product_name, quantity, price, supplier_id) " +
                     "VALUES (?,?,?,?)";
     private static final String UPDATE_PRODUCT =
             "UPDATE products " +
-            "SET name = ?, quantity = ?, price = ?, supplier_id = ? " +
+            "SET product_name = ?, quantity = ?, price = ?, supplier_id = ? " +
             "WHERE id = ?";
 
     private static final String DELETE_PRODUCT_BY_ID = "DELETE FROM products WHERE id = ?";
@@ -125,7 +125,7 @@ public class ProductDaoImpl implements ProductDao {
                 if (product == null) {
                     product = Product.builder()
                                      .id(resultSet.getLong("id"))
-                                     .name(resultSet.getString("name"))
+                                     .name(resultSet.getString("product_name"))
                                      .price(resultSet.getBigDecimal("price"))
                                      .quantity(resultSet.getInt("quantity"))
                                      .orders(new HashSet<>())
@@ -175,7 +175,7 @@ public class ProductDaoImpl implements ProductDao {
 
                 product = Product.builder()
                                  .id(resultSet.getLong("id"))
-                                 .name(resultSet.getString("name"))
+                                 .name(resultSet.getString("product_name"))
                                  .price(resultSet.getBigDecimal("price"))
                                  .quantity(resultSet.getInt("quantity"))
                                  .supplier(Supplier.builder()

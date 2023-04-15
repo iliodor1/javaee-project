@@ -28,7 +28,7 @@ public class SupplierServlet extends HttpServlet {
         service = SupplierServiceImpl.getInstance();
     }
 
-    public SupplierServlet(SupplierService service) {
+    private SupplierServlet(SupplierService service) {
         this.service = service;
     }
 

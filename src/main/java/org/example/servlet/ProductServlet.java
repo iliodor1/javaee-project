@@ -64,7 +64,7 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        logger.info("Получен запрос на удаление поставщика");
+        logger.info("Получен запрос на удаление продукта");
         String uri = req.getRequestURI();
         Long id = getIdFromUri(resp, uri);
         if (id == null) return;
@@ -76,12 +76,12 @@ public class ProductServlet extends HttpServlet {
             resp.sendError(404, e.getMessage());
             return;
         }
-        logger.info("Поставщик успешно удален");
+        logger.info("Продукт успешно удален");
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        logger.info("Получен запрос на удаление продукта");
+        logger.info("Получен запрос на добавление продукта");
         NewProduct newProduct = objectMapper.readValue(req.getReader(), NewProduct.class);
 
         ResponseProduct product;
@@ -98,7 +98,7 @@ public class ProductServlet extends HttpServlet {
         resp.setContentType("application/json; charset=UTF-8");
         out.print(json);
         out.flush();
-        logger.info("Продукт удален");
+        logger.info("Продукт добавлен");
     }
 
     @Override

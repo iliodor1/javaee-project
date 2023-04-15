@@ -18,7 +18,7 @@ public class OrderDaoImpl implements OrderDao {
     private static final String INSERT_ORDER_PRODUCT =
             "INSERT INTO order_products (order_id, product_id) VALUES (?, ?)";
     private static final String FIND_ORDER_BY_ID =
-            "SELECT o.*, p.id product_id, p.name product_name, p.quantity, p.price, p.supplier_id " +
+            "SELECT o.*, p.id product_id, p.product_name, p.quantity, p.price, p.supplier_id " +
                     "FROM orders o " +
                     "LEFT JOIN order_products op " +
                     "ON o.id = op.order_id " +
@@ -27,7 +27,7 @@ public class OrderDaoImpl implements OrderDao {
                     "WHERE o.id = ?";
 
     private static final String FIND_ALL_ORDERS =
-            "SELECT o.*, p.id product_id, p.name product_name, p.quantity, p.price, p.supplier_id " +
+            "SELECT o.*, p.id product_id, p.product_name, p.quantity, p.price, p.supplier_id " +
                     "FROM orders o " +
                     "LEFT JOIN order_products op " +
                     "ON o.id = op.order_id " +
@@ -53,6 +53,7 @@ public class OrderDaoImpl implements OrderDao {
                      INSERT_ORDER, Statement.RETURN_GENERATED_KEYS);
              PreparedStatement insertOrderProductStatement = connection.prepareStatement(
                      INSERT_ORDER_PRODUCT)) {
+
             connection.setAutoCommit(false);
             insertOrderStatement.setObject(1, order.getOrderDate());
             insertOrderStatement.executeUpdate();
@@ -118,7 +119,7 @@ public class OrderDaoImpl implements OrderDao {
 
                 Product product = Product.builder()
                                          .id(resultSet.getLong("product_id"))
-                                         .name(resultSet.getString("name"))
+                                         .name(resultSet.getString("product_name"))
                                          .price(resultSet.getBigDecimal("price"))
                                          .quantity(resultSet.getInt("quantity"))
                                          .build();
@@ -157,7 +158,7 @@ public class OrderDaoImpl implements OrderDao {
 
                 Product product = Product.builder()
                                          .id(resultSet.getLong("product_id"))
-                                         .name(resultSet.getString("name"))
+                                         .name(resultSet.getString("product_name"))
                                          .price(resultSet.getBigDecimal("price"))
                                          .quantity(resultSet.getInt("quantity"))
                                          .build();

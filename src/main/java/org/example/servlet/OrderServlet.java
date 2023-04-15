@@ -1,9 +1,7 @@
 package org.example.servlet;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.dto.order.ResponseOrder;
-import org.example.dto.supplier.ResponseSupplier;
 import org.example.exceptions.NotFoundException;
 import org.example.services.order.OrderService;
 import org.example.services.order.OrderServiceImpl;
@@ -38,6 +36,8 @@ public class OrderServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        logger.info("Получен запрос на добавление заказа");
+
         List<Long> productIds = Arrays.stream(req.getParameterValues("productId"))
                                       .map(Long::parseLong)
                                       .collect(Collectors.toList());
@@ -55,6 +55,7 @@ public class OrderServlet extends HttpServlet {
         resp.setContentType("application/json; charset=UTF-8");
         out.print(json);
         out.flush();
+        logger.info("Заказ добавлен");
     }
 
     @Override

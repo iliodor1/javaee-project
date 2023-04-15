@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS suppliers
 CREATE TABLE IF NOT EXISTS products
 (
     id          bigint GENERATED ALWAYS AS IDENTITY primary key,
-    name        varchar(50)                      NOT NULL,
+product_name        varchar(50)                      NOT NULL,
     quantity    int                              NOT NULL,
     price       decimal check ( price > 0 )      NOT NULL,
     supplier_id bigint check ( supplier_id > 0 ) NOT NULL REFERENCES suppliers (id) ON DELETE CASCADE

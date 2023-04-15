@@ -18,10 +18,10 @@ public class OrderMapper {
         return ResponseOrder.builder()
                             .id(order.getId())
                             .date(order.getOrderDate().format(FORMATTER))
-                            .products(order.getProducts()
-                                           .stream()
-                                           .map(Product::getId)
-                                           .collect(Collectors.toList()))
+                            .products(order.getProducts() == null ? null : order.getProducts()
+                                                                                  .stream()
+                                                                                  .map(Product::getId)
+                                                                                  .collect(Collectors.toList()))
                             .build();
     }
 }
