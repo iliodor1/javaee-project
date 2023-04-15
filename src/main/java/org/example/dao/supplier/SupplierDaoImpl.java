@@ -18,13 +18,13 @@ public class SupplierDaoImpl implements SupplierDao {
                     "WHERE id = ?";
 
     private static final String FIND_SUPPLIER_BY_ID =
-            "SELECT s.*, p.id product_id, name, quantity, price, supplier_id " +
+            "SELECT s.*, p.id product_id, product_name, quantity, price, supplier_id " +
                     "FROM suppliers s " +
                     "LEFT JOIN products p ON s.id = p.supplier_id " +
                     "WHERE s.id = ?";
 
     private static final String FIND_ALL_SUPPLIERS =
-            "SELECT s.*, p.id product_id, name, quantity, price, supplier_id " +
+            "SELECT s.*, p.id product_id, product_name, quantity, price, supplier_id " +
                     "FROM suppliers s " +
                     "LEFT JOIN products p ON s.id = p.supplier_id";
 
@@ -115,7 +115,7 @@ public class SupplierDaoImpl implements SupplierDao {
                                          .supplier(Supplier.builder().id(supplier.getId()).build())
                                          .price(resultSet.getBigDecimal("price"))
                                          .quantity(resultSet.getInt("quantity"))
-                                         .name(resultSet.getString("name"))
+                                         .name(resultSet.getString("product_name"))
                                          .build();
 
                 if (!resultSet.wasNull()) {
@@ -154,7 +154,7 @@ public class SupplierDaoImpl implements SupplierDao {
                                          .supplier(Supplier.builder().id(supplier.getId()).build())
                                          .price(resultSet.getBigDecimal("price"))
                                          .quantity(resultSet.getInt("quantity"))
-                                         .name(resultSet.getString("name"))
+                                         .name(resultSet.getString("product_name"))
                                          .build();
 
                 if (!resultSet.wasNull()) {
