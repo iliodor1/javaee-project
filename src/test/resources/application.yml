@@ -1,0 +1,6 @@
+db:
+  username: sa
+  password: password
+  url: jdbc:h2:file:./db/test;INIT=runscript from 'src/main/resources/schema.sql'\\;runscript from 'src/test/resources/data.sql'
+  driverClassName: org.h2.Driver
+
